@@ -2,10 +2,12 @@ package main
 
 import (
 	"database/sql"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -21,6 +23,9 @@ var (
 )
 
 func init() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 	connStr := "user=postgres password=Hacktiv8123 host=db.gxdymouplidfsyylzfei.supabase.co port=5432 dbname=postgres"
 	var err error
 	db, err = sql.Open("postgres", connStr)
@@ -38,6 +43,7 @@ func main() {
 
 	e := echo.New()
 
+	port := os.Getenv("PORT")
 	// API Endpoint untuk menambahkan buku
 	e.POST("/books", createBook)
 
@@ -53,7 +59,7 @@ func main() {
 	// API Endpoint untuk menghapus buku berdasarkan ID
 	e.DELETE("/books/:id", deleteBook)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(port))
 }
 
 func createBook(c echo.Context) error {
