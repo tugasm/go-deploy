@@ -1,0 +1,32 @@
+name: Go CI/CD
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Build
+      run: go build
+
+    - name: Test
+      run: go test ./...
+
+    - name: Deploy to Local
+      run: |
+        # Tambahkan langkah-langkah deployment ke sini
+
+        # Contoh: Salin file binari aplikasi ke server lokal
+        scp ./myapp user@your-local-server:/path/to/deployment/directory
+
+        # Contoh: Restart aplikasi di server lokal
+        ssh user@your-local-server "systemctl restart myapp.service"
